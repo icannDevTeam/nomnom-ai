@@ -5,7 +5,7 @@ import {
   MessageCircle, Heart, ChevronRight, Zap, Award,
   Utensils, Coffee, Pizza, IceCream 
 } from 'lucide-react';
-import { useUser } from '@context/UserContext';
+import { useUser } from '../context/UserContext';
 
 // Restaurant brand colors for chat buttons
 const restaurantBrandColors = {
@@ -471,120 +471,121 @@ const RestoAgents = () => {
               key={agent.id}
               className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-700 group"
             >
-              <div className="flex items-center p-4">
-                {/* Agent Avatar */}
-                <div className="flex-shrink-0 relative">
-                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-100 dark:border-gray-700 group-hover:border-primary-500 transition-colors">
-                    <img
-                      src={agent.image}
-                      alt={agent.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                  
-                  {/* Online Indicator */}
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
-                    <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                  </div>
-                  
-                  {/* Verified Badge */}
-                  {agent.verified && (
-                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary-500 rounded-full flex items-center justify-center">
-                      <Award size={10} className="text-white" />
+              <div className="flex flex-col md:flex-row md:items-center p-4 space-y-4 md:space-y-0">
+                {/* Top Row - Avatar and Info */}
+                <div className="flex items-center flex-1 min-w-0">
+                  {/* Agent Avatar */}
+                  <div className="flex-shrink-0 relative">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-100 dark:border-gray-700 group-hover:border-primary-500 transition-colors">
+                      <img
+                        src={agent.image}
+                        alt={agent.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
                     </div>
-                  )}
+                    
+                    {/* Online Indicator */}
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                      <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                    </div>
+                    
+                    {/* Verified Badge */}
+                    {agent.verified && (
+                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary-500 rounded-full flex items-center justify-center">
+                        <Award size={10} className="text-white" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Agent Info */}
+                  <div className="flex-1 ml-4 min-w-0">
+                    <h3 className="font-semibold text-lg text-gray-900 dark:text-white truncate">
+                      {agent.name}
+                    </h3>
+                    <div className="flex items-center space-x-3 mt-1">
+                      <span className="text-sm text-primary-600 dark:text-primary-400 font-medium">
+                        {agent.cuisine}
+                      </span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        {agent.price}
+                      </span>
+                      <div className="flex items-center space-x-1">
+                        <Star size={14} className="text-yellow-500" fill="currentColor" />
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                          {agent.rating}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 line-clamp-2">
+                      {agent.description}
+                    </p>
+                    
+                    {/* Stats Row */}
+                    <div className="flex items-center space-x-4 mt-3 text-xs text-gray-500 dark:text-gray-400 overflow-x-auto">
+                      <div className="flex items-center space-x-1 flex-shrink-0">
+                        <MessageCircle size={12} />
+                        <span>{agent.totalChats} chats</span>
+                      </div>
+                      <div className="flex items-center space-x-1 flex-shrink-0">
+                        <MapPin size={12} />
+                        <span className="truncate">{agent.location}</span>
+                      </div>
+                      <div className="flex items-center space-x-1 flex-shrink-0">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                        <span>{Math.floor(Math.random() * 8) + 2} chatting</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Agent Info */}
-                <div className="flex-1 ml-4 min-w-0">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-lg text-gray-900 dark:text-white truncate">
-                        {agent.name}
-                      </h3>
-                      <div className="flex items-center space-x-3 mt-1">
-                        <span className="text-sm text-primary-600 dark:text-primary-400 font-medium">
-                          {agent.cuisine}
-                        </span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                          {agent.price}
-                        </span>
-                        <div className="flex items-center space-x-1">
-                          <Star size={14} className="text-yellow-500" fill="currentColor" />
-                          <span className="text-sm font-medium text-gray-900 dark:text-white">
-                            {agent.rating}
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 line-clamp-2">
-                        {agent.description}
-                      </p>
-                      
-                      {/* Stats Row */}
-                      <div className="flex items-center space-x-4 mt-3 text-xs text-gray-500 dark:text-gray-400">
-                        <div className="flex items-center space-x-1">
-                          <MessageCircle size={12} />
-                          <span>{agent.totalChats} chats</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <MapPin size={12} />
-                          <span>{agent.location}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                          <span>{Math.floor(Math.random() * 8) + 2} chatting</span>
-                        </div>
-                      </div>
-                    </div>
+                {/* Action Buttons - Separate row on mobile, right side on desktop */}
+                <div className="flex space-x-2 md:flex-shrink-0 md:ml-4">
+                  <button
+                    onClick={() => handleChatWithAgent(agent)}
+                    className="flex-1 md:flex-initial px-4 md:px-6 py-2.5 text-white rounded-xl hover:opacity-90 transition-all duration-200 font-medium text-sm flex items-center justify-center space-x-2 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                    style={{ 
+                      backgroundColor: restaurantBrandColors[agent.slug] || '#3b82f6',
+                      boxShadow: `0 4px 14px 0 ${restaurantBrandColors[agent.slug] || '#3b82f6'}20`
+                    }}
+                  >
+                    <MessageCircle size={16} />
+                    <span>Chat</span>
+                  </button>
+                  
+                  <Link
+                    to={`/restaurant/${agent.slug}`}
+                    className="p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 hover:shadow-md flex-shrink-0"
+                    title="View restaurant details"
+                  >
+                    <ChevronRight size={16} className="text-gray-600 dark:text-gray-400" />
+                  </Link>
+                </div>
+              </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => handleChatWithAgent(agent)}
-                        className="px-6 py-2.5 text-white rounded-xl hover:opacity-90 transition-all duration-200 font-medium text-sm flex items-center space-x-2 shadow-md hover:shadow-lg hover:-translate-y-0.5"
-                        style={{ 
-                          backgroundColor: restaurantBrandColors[agent.slug] || '#3b82f6',
-                          boxShadow: `0 4px 14px 0 ${restaurantBrandColors[agent.slug] || '#3b82f6'}20`
-                        }}
-                      >
-                        <MessageCircle size={16} />
-                        <span>Chat</span>
-                      </button>
-                      
-                      <Link
-                        to={`/restaurant/${agent.slug}`}
-                        className="p-2.5 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 hover:shadow-md"
-                        title="View restaurant details"
-                      >
-                        <ChevronRight size={16} className="text-gray-600 dark:text-gray-400" />
-                      </Link>
-                    </div>
+              {/* Promo Banner */}
+              {agent.promo && (
+                <div className="mx-4 mb-3 p-2 bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900/30 dark:to-red-900/30 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <Zap size={14} className="text-orange-600 dark:text-orange-400" />
+                    <span className="text-sm font-medium text-orange-800 dark:text-orange-200">
+                      {agent.promo}
+                    </span>
                   </div>
+                </div>
+              )}
 
-                  {/* Promo Banner */}
-                  {agent.promo && (
-                    <div className="mt-3 p-2 bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900/30 dark:to-red-900/30 rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <Zap size={14} className="text-orange-600 dark:text-orange-400" />
-                        <span className="text-sm font-medium text-orange-800 dark:text-orange-200">
-                          {agent.promo}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Specialties */}
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {agent.specialties.slice(0, 3).map((specialty) => (
-                      <span
-                        key={specialty}
-                        className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full"
-                      >
-                        {specialty}
-                      </span>
-                    ))}
-                  </div>
+              {/* Specialties */}
+              <div className="mx-4 mb-4">
+                <div className="flex flex-wrap gap-2">
+                  {agent.specialties.slice(0, 3).map((specialty) => (
+                    <span
+                      key={specialty}
+                      className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full"
+                    >
+                      {specialty}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>

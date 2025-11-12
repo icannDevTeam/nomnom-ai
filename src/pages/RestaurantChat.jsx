@@ -5,7 +5,7 @@ import {
   Target, Mic, Loader, Plus, Brain, ArrowLeft,
   Phone, Globe, Menu as MenuIcon, Users, Award
 } from 'lucide-react';
-import { useUser } from '@context/UserContext';
+import { useUser } from '../context/UserContext';
 
 const API_BASE = 'http://localhost:8000';
 

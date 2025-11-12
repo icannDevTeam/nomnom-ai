@@ -5,7 +5,7 @@ import {
   Heart, Bell, BellOff, Send, Image, ThumbsUp, MessageCircle,
   Users, Award, Calendar, DollarSign, Wifi, Car, CreditCard
 } from 'lucide-react';
-import { useUser } from '@context/UserContext';
+import { useUser } from '../context/UserContext';
 
 // Mock restaurant data - will be replaced with API calls
 const mockRestaurantData = {

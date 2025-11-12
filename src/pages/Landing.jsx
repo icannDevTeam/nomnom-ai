@@ -4,7 +4,10 @@ import {
   Send, Search, FileText, Star, Clock, 
   Mic, Loader, Plus, Brain, Percent, MapPin 
 } from 'lucide-react';
-import { useUser } from '@context/UserContext';
+import { useUser } from '../context/UserContext';
+import AdvancedSearch from '../components/search/AdvancedSearch';
+import SearchResults from '../components/search/SearchResults';
+import { searchRestaurants } from '../services/restaurantService';
 
 const API_BASE = 'http://localhost:8000';
 
@@ -66,6 +69,8 @@ const Landing = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
   const [isTyping, setIsTyping] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [currentFilters, setCurrentFilters] = useState({});
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -198,6 +203,73 @@ const Landing = () => {
     return formatted;
   };
 
+  const handleSearch = (query, filters) => {
+    setCurrentFilters(filters);
+    setShowWelcome(false);
+    
+    // Perform the search using our restaurant service
+    const results = searchRestaurants(query, filters);
+    setSearchResults(results);
+    
+    // Create a comprehensive search message for the chat
+    let searchMessage = `Search for: "${query}"`;
+    
+    if (filters.cuisine?.length > 0) {
+      searchMessage += `\nCuisines: ${filters.cuisine.join(', ')}`;
+    }
+    if (filters.priceRange?.length > 0) {
+      const priceLabels = filters.priceRange.map(p => {
+        const ranges = { 
+          '1': 'Rp (Under 150K)', 
+          '2': 'Rp Rp (150K-300K)', 
+          '3': 'Rp Rp Rp (300K-600K)', 
+          '4': 'Rp Rp Rp Rp (600K+)' 
+        };
+        return ranges[p];
+      });
+      searchMessage += `\nPrice Range: ${priceLabels.join(', ')}`;
+    }
+    if (filters.rating) {
+      searchMessage += `\nMinimum Rating: ${filters.rating}+ stars`;
+    }
+    if (filters.distance) {
+      searchMessage += `\nDistance: Within ${filters.distance} km`;
+    }
+    if (filters.dietary?.length > 0) {
+      searchMessage += `\nDietary Options: ${filters.dietary.join(', ')}`;
+    }
+    
+    const additionalOptions = [];
+    if (filters.openNow) additionalOptions.push('Open Now');
+    if (filters.hasDelivery) additionalOptions.push('Delivery Available');
+    if (filters.hasReservations) additionalOptions.push('Accepts Reservations');
+    
+    if (additionalOptions.length > 0) {
+      searchMessage += `\nAdditional Requirements: ${additionalOptions.join(', ')}`;
+    }
+    
+    // Add the search to chat history
+    sendMessage(searchMessage);
+    
+    // Add AI response about the search results
+    setTimeout(() => {
+      const resultMessage = results.length > 0 
+        ? `I found ${results.length} restaurant${results.length > 1 ? 's' : ''} matching your search! ${results.length > 3 ? 'Here are the top matches:' : 'Here they are:'}\n\n${results.slice(0, 3).map(r => `🍽️ **${r.name}** (${r.rating}⭐)\n   ${r.cuisine} • ${r.location} • ${r.distance}mi away`).join('\n\n')}\n\nYou can see all results below the chat. Would you like me to help you with anything specific about these restaurants?`
+        : `I couldn't find any restaurants matching your criteria. Try adjusting your filters or search terms to see more options.`;
+      
+      addMessage({
+        id: messages.length + 2,
+        type: 'ai',
+        content: resultMessage,
+        timestamp: new Date()
+      });
+    }, 1000);
+  };
+
+  const handleFilterChange = (filters) => {
+    setCurrentFilters(filters);
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
       {/* Chat Header */}
@@ -232,6 +304,16 @@ const Landing = () => {
       {/* Chat Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-4 py-6">
+          {/* Compact Search Bar (when welcome is hidden) */}
+          {!showWelcome && (
+            <div className="mb-6 sticky top-0 bg-gray-50 dark:bg-gray-900 pt-2 pb-4 -mx-4 px-4 z-10">
+              <AdvancedSearch 
+                onSearch={handleSearch}
+                onFilterChange={handleFilterChange}
+              />
+            </div>
+          )}
+
           {/* Welcome Section */}
           {showWelcome && (
             <div className="text-center mb-8">
@@ -241,9 +323,17 @@ const Landing = () => {
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                 Welcome to <span className="text-primary-600">NomnomAI</span>
               </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+              <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
                 Your intelligent restaurant search assistant. Find restaurants, read reviews, view photos, and discover amazing dining experiences.
               </p>
+
+              {/* Advanced Search Component */}
+              <div className="mb-8">
+                <AdvancedSearch 
+                  onSearch={handleSearch}
+                  onFilterChange={handleFilterChange}
+                />
+              </div>
 
               {/* Quick Actions Grid */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
@@ -323,6 +413,20 @@ const Landing = () => {
           </div>
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Search Results */}
+        {searchResults.length > 0 && (
+          <div className="max-w-4xl mx-auto px-4 pb-6">
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+              <SearchResults 
+                results={searchResults}
+                query={messages.length > 1 ? messages[messages.length - 2]?.content?.split('"')[1] : ''}
+                filters={currentFilters}
+                isLoading={false}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Chat Input */}
