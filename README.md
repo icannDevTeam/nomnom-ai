@@ -1,17 +1,29 @@
-# Resto Agent Frontend
+# NomNom AI - Restaurant Discovery Platform
 
-A modern React frontend for the Resto Agent - AI-powered restaurant discovery and recommendation system.
+A comprehensive AI-powered restaurant discovery and recommendation system built with modern web technologies.
 
-## 🚀 Features
+## 🏗️ Project Structure
 
-- **Modern React 18** with functional components and hooks
-- **Vite** for fast development and building
-- **Tailwind CSS** for responsive styling
-- **React Router v6** for client-side routing
-- **Geolocation API** integration for location-based recommendations
-- **AI Chat Interface** for restaurant conversations
-- **Dark/Light Mode** support
-- **Responsive Design** for mobile and desktop
+This repository contains multiple modules of the NomNom AI platform:
+
+### 📁 Modules
+
+- **Frontend (`frontend` branch)** - React 18 + Vite frontend application
+- **Backend** (Coming soon) - Node.js/Python API server
+- **AI Engine** (Coming soon) - Restaurant recommendation AI
+- **Mobile App** (Coming soon) - React Native mobile application
+
+## 🚀 Frontend Module
+
+The frontend module is a modern React application featuring:
+
+- **React 18** with modern hooks and functional components
+- **Vite** for lightning-fast development and optimized builds
+- **Tailwind CSS** with custom theming and dark mode
+- **React Router v6** for seamless navigation
+- **AI Chat Interface** for restaurant interactions
+- **Geolocation Services** for location-based recommendations
+- **Responsive Design** for all device types
 
 ## 📱 Pages & Features
 
