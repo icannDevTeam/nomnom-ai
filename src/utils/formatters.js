@@ -104,6 +104,9 @@ export const formatIndonesianPhone = (phone) => {
  * @returns {string} User initials
  */
 export const getInitials = (name) => {
+  if (name === 'Edy') {
+    return 'E.D';
+  }
   return name
     .split(' ')
     .map(word => word.charAt(0).toUpperCase())

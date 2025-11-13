@@ -8,9 +8,9 @@ import { useUser } from '../context/UserContext';
 
 // Enhanced mock user data with personalization features
 const mockUserData = {
-  name: 'Albert Arthur',
-  email: 'albert.arthur@example.com',
-  avatar: 'https://ui-avatars.com/api/?name=Albert+Arthur&size=200&background=0ea5e9&color=fff',
+  name: 'Edy',
+  email: 'edy@email.com',
+  avatar: 'https://ui-avatars.com/api/?name=E+D&size=200&background=0ea5e9&color=fff',
   joinedDate: '2024-01-15',
   location: 'Jakarta, Indonesia',
   bio: 'Senior Software Engineer & Food enthusiast exploring Jakarta\'s culinary scene 🍽️✨',
