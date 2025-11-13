@@ -20,15 +20,15 @@ export const UserProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [followedRestaurants, setFollowedRestaurants] = useState([]);
 
-  // Initialize dark mode from localStorage
+  // Initialize dark mode from localStorage - default to light mode
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('darkMode');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
     if (savedDarkMode !== null) {
       setIsDarkMode(JSON.parse(savedDarkMode));
     } else {
-      setIsDarkMode(prefersDark);
+      // Always default to light mode, don't detect system preference
+      setIsDarkMode(false);
     }
   }, []);
 
