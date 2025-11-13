@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, Filter, Star, MapPin, Clock, Users, Bot, 
   MessageCircle, Heart, ChevronRight, Zap, Award,
@@ -185,6 +185,7 @@ const cuisineFilters = [
 
 const RestoAgents = () => {
   const { location } = useUser();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCuisine, setSelectedCuisine] = useState('all');
   const [filteredAgents, setFilteredAgents] = useState(restaurantAgents);
@@ -255,8 +256,8 @@ const RestoAgents = () => {
   };
 
   const handleChatWithAgent = (agent) => {
-    // Navigate to branded restaurant chat page
-    window.location.href = `/chat/${agent.slug}`;
+  // Navigate to branded restaurant chat page (client-side)
+  navigate(`/chat/${agent.slug}`);
   };
 
   return (
